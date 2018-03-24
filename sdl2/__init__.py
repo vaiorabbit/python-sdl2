@@ -1,9 +1,36 @@
-from .defs import *
 from .api import *
 from .sdl2 import *
+from .sdl2_hints import *
 from .sdl2_cpuinfo import *
 from .sdl2_version import *
 from .sdl2_timer import *
+from .sdl2_events import *
+from .sdl2_keyboard import *
+from .sdl2_keycode import *
+from .sdl2_scancode import *
+from .sdl2_audio import *
+from .sdl2_rwops import *
+from .sdl2_platform import *
+from .sdl2_error import *
+from .sdl2_clipboard import *
+from .sdl2_rect import *
+from .sdl2_render import *
+from .sdl2_video import *
+from .sdl2_surface import *
+from .sdl2_filesystem import *
+from .sdl2_log import *
+from .sdl2_haptic import *
+from .sdl2_touch import *
+from .sdl2_power import *
+from .sdl2_pixels import *
+from .sdl2_messagebox import *
+from .sdl2_gesture import *
+from .sdl2_vulkan import *
+from .sdl2_gamecontroller import *
+from .sdl2_joystick import *
+from .sdl2_mouse import *
+from .sdl2_shape import *
+from .sdl2_blendmode import *
 
 __author__  = 'vaiorabbit'
 __version__ = '1.0.0'
@@ -18,10 +45,33 @@ def sdl2_load(lib, output_error = False):
     sdl2_cpuinfo.setup_symbols()
     sdl2_version.setup_symbols()
     sdl2_timer.setup_symbols()
-
-    # SDL2_API_NAMES.append('SDL_SetMainReady')
-    # SDL2_API_ARGS_MAP['SDL_SetMainReady'] = []
-    # SDL2_API_RETVAL_MAP['SDL_SetMainReady'] = None
+    sdl2_events.setup_symbols()
+    sdl2_keyboard.setup_symbols()
+    sdl2_keycode.setup_symbols()
+    sdl2_scancode.setup_symbols()
+    sdl2_audio.setup_symbols()
+    sdl2_rwops.setup_symbols()
+    sdl2_platform.setup_symbols()
+    sdl2_error.setup_symbols()
+    sdl2_clipboard.setup_symbols()
+    sdl2_rect.setup_symbols()
+    sdl2_render.setup_symbols()
+    sdl2_video.setup_symbols()
+    sdl2_surface.setup_symbols()
+    sdl2_filesystem.setup_symbols()
+    sdl2_log.setup_symbols()
+    sdl2_haptic.setup_symbols()
+    sdl2_touch.setup_symbols()
+    sdl2_power.setup_symbols()
+    sdl2_pixels.setup_symbols()
+    sdl2_messagebox.setup_symbols()
+    sdl2_gesture.setup_symbols()
+    sdl2_vulkan.setup_symbols()
+    sdl2_gamecontroller.setup_symbols()
+    sdl2_joystick.setup_symbols()
+    sdl2_mouse.setup_symbols()
+    sdl2_shape.setup_symbols()
+    sdl2_blendmode.setup_symbols()
 
     for name in api.SDL2_API_NAMES:
         try:

@@ -1,36 +1,150 @@
 import os, pprint, re, sys
+import json
+from pathlib import Path
 from clang.cindex import Config, CursorKind, Index, TranslationUnit, TranslationUnitLoadError, TypeKind
 
-Config.set_library_path("/usr/local/Cellar/llvm/5.0.1/lib")
+Config.set_library_path("/usr/local/Cellar/llvm/6.0.0/lib")
 
 ####################################################################################################
+
+def generate_type_mapping(headers_list_filename = './sdl2_headers_list.json', headers_dir = './SDL2'):
+    headers_list_file = Path(headers_list_filename)
+
+    if not headers_list_file.exists():
+        return False
+
+    headers_list = None
+    with headers_list_file.open() as f:
+        headers_list = json.load(f)
+
+    print("{", file = sys.stdout)
+    first = True
+    for header_filename in headers_list:
+        header_filename = headers_dir + '/' + header_filename
+        if not Path(header_filename).exists():
+            continue
+
+        ctx = ParseContext()
+        ctx.parse_file = header_filename
+        idx = Index.create()
+        try:
+            tu = idx.parse(ctx.parse_file, args=parser_arg, unsaved_files=None, options=parser_opt)
+            ctx.depth = 0
+            collect_decl(ctx, tu.cursor)
+        except TranslationUnitLoadError as err:
+            print(err)
+        assert ctx.depth == 0
+
+        for typedef_name, typedef_info in ctx.decl_typedefs.items():
+            print("    %s \"%s\" : \"%s\"" % (' ' if first else ',', typedef_name, typedef_info.type_kind), file = sys.stdout)
+            first = False
+    print("}", file = sys.stdout)
+
+
+def generate_define_list(headers_list_filename = './sdl2_headers_list.json', headers_dir = './SDL2', concatinate = True):
+    headers_list_file = Path(headers_list_filename)
+
+    if not headers_list_file.exists():
+        return False
+
+    headers_list = None
+    with headers_list_file.open() as f:
+        headers_list = json.load(f)
+
+    print("{", file = sys.stdout)
+    first = True
+    for header_filename in headers_list:
+        header_filename = headers_dir + '/' + header_filename
+        if not Path(header_filename).exists():
+            continue
+
+        ctx = ParseContext()
+        ctx.parse_file = header_filename
+        idx = Index.create()
+        try:
+            tu = idx.parse(ctx.parse_file, args=parser_arg, unsaved_files=None, options=parser_opt)
+            ctx.depth = 0
+            collect_decl(ctx, tu.cursor)
+        except TranslationUnitLoadError as err:
+            print(err)
+        assert ctx.depth == 0
+
+        for macro_name, macro_value in ctx.decl_macros.items():
+            val = ' '.join(macro_value) if concatinate else macro_value
+            print("    %s \"%s\" : %s" % (' ' if first else ',', macro_name, val), file = sys.stdout)
+            first = False
+    print("}", file = sys.stdout)
+
+
+####################################################################################################
+
+define_mapping = None
+
+def _init_define_mapping(mapping_filename = './sdl2_define_mapping.json'):
+    mapping_file = Path(mapping_filename)
+
+    if not mapping_file.exists():
+        return False
+    with mapping_file.open() as f:
+        global define_mapping
+        define_mapping = json.load(f)
+
+    return True
+
+def get_define_mapping(strDefineName):
+    if define_mapping == None:
+        _init_define_mapping()
+    if strDefineName not in define_mapping:
+        return None
+    return define_mapping[strDefineName]
+
+####################################################################################################
+
+cindex_mapping = None
+
+def _init_type_mapping(mapping_filename = './sdl2_cindex_mapping.json'):
+    mapping_file = Path(mapping_filename)
+
+    if not mapping_file.exists():
+        return False
+    with mapping_file.open() as f:
+        global cindex_mapping
+        cindex_mapping = json.load(f)
+
+    return True
+
+def register_sdl2_cindex_mapping(strTypeKind, strSDL2Typedef):
+    if cindex_mapping == None:
+        _init_type_mapping()
+    if strSDL2Typedef not in cindex_mapping:
+        cindex_mapping[strSDL2Typedef] = strTypeKind
 
 def get_sdl2_cindex_mapping(strTypeKind, strSDL2Typedef):
     if strTypeKind != 'TypeKind.TYPEDEF':
         return strTypeKind
 
-    cindex_mapping = {
-        # SDL_stdinc.h
-        'SDL_bool' : 'TypeKind.BOOL',
-        'Sint8' : 'TypeKind.SCHAR',
-        'Sint16' : 'TypeKind.SHORT',
-        'Sint32' : 'TypeKind.INT',
-        'Sint64' : 'TypeKind.LONG',
-        'Uint8' : 'TypeKind.UCHAR',
-        'Uint16' : 'TypeKind.USHORT',
-        'Uint32' : 'TypeKind.UINT',
-        'Uint64' : 'TypeKind.ULONG',
-    }
+    if cindex_mapping == None:
+        _init_type_mapping()
     return cindex_mapping[strSDL2Typedef]
 
 def get_cindex_ctypes_mapping(strTypeKind, strSDL2Typedef):
 
-    pointerToChar = False
+    if strTypeKind == 'TypeKind.RECORD':
+        return strSDL2Typedef
+
+    isPointerToChar = False
     if strTypeKind == 'TypeKind.POINTER':
-        pattern = re.compile(r"\schar\s\*")
+        pattern = re.compile(r"\s*char\s*\*")
         m = re.search(pattern, strSDL2Typedef)
         if m:
-            pointerToChar = True
+            isPointerToChar = True
+
+    isSizeType = False
+    if strTypeKind == 'TypeKind.TYPEDEF':
+        pattern = re.compile(r"\s*size_t\s*")
+        m = re.search(pattern, strSDL2Typedef)
+        if m:
+            isSizeType = True
 
     ctypes_mapping = {
         'TypeKind.VOID' : None,
@@ -58,10 +172,15 @@ def get_cindex_ctypes_mapping(strTypeKind, strSDL2Typedef):
         'TypeKind.NULLPTR' : 'ctypes.c_void_p',
         'TypeKind.POINTER' : 'ctypes.c_void_p',
         'TypeKind.ENUM' : 'ctypes.c_int',
+        'TypeKind.FUNCTIONPROTO' : 'ctypes.c_void_p',
+        'TypeKind.CONSTANTARRAY' : 'ctypes.c_void_p', # 'va_list' on macOS
+        'TypeKind.RECORD' : None,
     }
 
-    if pointerToChar:
+    if isPointerToChar:
         return 'ctypes.c_char_p'
+    elif isSizeType:
+        return 'ctypes.c_size_t'
     else:
         return ctypes_mapping[get_sdl2_cindex_mapping(strTypeKind, strSDL2Typedef)]
 
@@ -110,9 +229,13 @@ class TypedefInfo(object):
         self.name = ""
         self.element_count = -1
         self.type_kind = TypeKind.INVALID
+        self.func_proto = None
 
     def __repr__(self):
-        return "%s : ((%s) x %s)" % (self.name, self.type_kind, self.element_count)
+        r = "%s : ((%s) x %s)" % (self.name, self.type_kind, self.element_count)
+        if self.func_proto != None:
+            r += " [%s]" % str(vars(self.func_proto))
+        return r
 
 class ArgumentInfo(object):
     """
@@ -198,6 +321,23 @@ class ParseContext(object):
     def add_decl_function(self, function_name, function_value):
         self.decl_functions[function_name] = function_value
 
+    def has_decl_enum(self, name=None):
+        if name == None or name == "":
+            name = "anonymous_enum_"  + str(len(self.decl_enums))
+        return name in self.decl_enums.keys()
+
+    def has_decl_macro(self, macro_name):
+        return macro_name in self.decl_macros.keys()
+
+    def has_decl_struct(self, struct_name):
+        return struct_name in self.decl_structs.keys()
+
+    def has_decl_typedef(self, typedef_name):
+        return typedef_name in self.decl_typedefs.keys()
+
+    def has_decl_function(self, function_name):
+        return function_name in self.decl_functions.keys()
+
 ####################################################################################################
 
 def collect_decl_macro(ctx, cursor):
@@ -208,17 +348,10 @@ def collect_decl_macro(ctx, cursor):
     ctx.collection_mode = ParseContext.Decl_Macro
     tokens = list(cursor.get_tokens())
     macro_name = str(tokens[0].spelling)
-    # omit parenthesis -> concatenate all tokens except 'macro_name (tokens[0])'
-    # macro_value = map((lambda t: str(t.spelling.replace('(', '').replace(')', ''))), tokens[1:len(tokens)])
-    # macro_value = ''.join(macro_value)
-
-    # macro_value = map((lambda t: str(t.spelling)), tokens[1:len(tokens)])
-    # macro_value = ' '.join(macro_value)
-
     macro_value = list(map((lambda t: str(t.spelling)), tokens[1:len(tokens)]))
 
     # pick out numerical values with 'SDL_' prefix
-    if re.match(r"^SDL_", macro_name): #and re.match(r"[+-]?\d+", macro_value):
+    if re.match(r"^SDL_", macro_name):
         ctx.add_decl_macro(macro_name, macro_value)
     ctx.collection_mode = ParseContext.Decl_Unknown
 
@@ -231,7 +364,7 @@ def collect_decl_typedef(ctx, cursor):
     ctx.push()
 
     underlying_type = cursor.underlying_typedef_type
-    # print(cursor.type.spelling, underlying_type.spelling)
+
     typedef_info = TypedefInfo()
     typedef_info.name = cursor.displayname
     typedef_info.type_kind = underlying_type.get_canonical().kind
@@ -241,15 +374,36 @@ def collect_decl_typedef(ctx, cursor):
         typedef_info.type_kind = underlying_type.get_array_element_type().get_canonical().kind
         typedef_info.element_count = underlying_type.get_array_size()
     elif underlying_type.kind == TypeKind.POINTER:
-        if underlying_type.get_pointee().get_canonical().kind == TypeKind.FUNCTIONPROTO:
-            typedef_info.type_kind = underlying_type.get_pointee().get_canonical().kind
+        canonical_type = underlying_type.get_pointee().get_canonical()
+        if canonical_type.kind == TypeKind.FUNCTIONPROTO:
+            typedef_info.type_kind = canonical_type.kind
+
+            typedef_info.func_proto = FunctionInfo()
+            typedef_info.func_proto.name = ""
+
+            result_type = canonical_type.get_result()
+            retval_info = RetvalInfo()
+            retval_info.type_name = result_type.spelling
+            retval_info.type_kind = result_type.kind
+
+            typedef_info.func_proto.retval = retval_info
+
+            arg_types = canonical_type.argument_types()
+            for arg_type in arg_types:
+                arg_info = ArgumentInfo()
+                arg_info.name = ""
+                arg_info.type_name = arg_type.spelling
+                arg_info.type_kind = arg_type.get_canonical().kind
+                typedef_info.func_proto.args.append(arg_info)
     elif underlying_type.kind == TypeKind.ELABORATED:
-        ctx.push()
-        cursor_structunion = underlying_type.get_declaration() # CursorKind.STRUCT_DECL or CursorKind.UNION_DECL
-        collect_decl_struct(ctx, cursor_structunion, cursor.displayname)
-        ctx.pop()
+        cursor_decl = underlying_type.get_declaration()
+        if cursor_decl.kind == CursorKind.STRUCT_DECL or cursor_decl.kind == CursorKind.UNION_DECL:
+            ctx.push()
+            collect_decl_struct(ctx, cursor_decl, cursor_decl.spelling, typedef_info.name)
+            ctx.pop()
     else:
         pass
+
     ctx.pop()
     ctx.add_decl_typedef(typedef_info.name, typedef_info)
     ctx.collection_mode = ParseContext.Decl_Unknown
@@ -270,7 +424,10 @@ def collect_decl_enum(ctx, cursor):
     ctx.add_decl_enum(name=cursor.displayname, values=val)
     ctx.collection_mode = ParseContext.Decl_Unknown
 
-def collect_decl_struct(ctx, cursor, typedef_name=None):
+#
+# TODO : Merge anonymous structs into one union (e.g. SDL_RWops)
+#
+def collect_decl_struct(ctx, cursor, struct_name=None, typedef_name=None):
 
     if str(cursor.location.file) != ctx.parse_file:
         return # pass
@@ -281,18 +438,34 @@ def collect_decl_struct(ctx, cursor, typedef_name=None):
     if (not cursor.kind in {CursorKind.STRUCT_DECL, CursorKind.UNION_DECL}) or n_children <= 0:
         return
 
+    struct_name = struct_name if struct_name != None else cursor.displayname
+    if ctx.has_decl_struct(struct_name):
+        return
     struct_info = StructInfo()
     struct_info.kind = cursor.kind # CursorKind.STRUCT_DECL or CursorKind.UNION_DECL
-    struct_info.name = typedef_name if typedef_name != None else cursor.displayname
+    struct_info.name = struct_name
 
     # NOTE : unnamed struct/union will be collected at 'collect_decl_typedef'.
     # ex.) typedef union {void *ptr; int id;} nk_handle; (exposed as an unnamed struct/union here)
     if struct_info.name == "":
-        return
+        # Definitions like 'typede struct (anonymous) {...} StructName' may cause to come here.
+        # e.g.)
+        # typedef struct
+        # {
+        #     Uint8 r, g, b;
+        # } SDL_MessageBoxColor;
+        if typedef_name == None:
+            return
+        struct_info.name = typedef_name
 
-    fields = cursor.type.get_fields()
-    for field in fields:
-        ctx.push()
+    # fields = cursor.type.get_fields()
+    #
+    # for field in fields:
+    for field in cursor.get_children():
+
+        if not field.is_definition(): # e.g.) struct SDL_BlitMap *map;
+            continue
+
         canonical_kind = field.type.get_canonical().kind
 
         field_info = FieldInfo()
@@ -302,18 +475,29 @@ def collect_decl_struct(ctx, cursor, typedef_name=None):
         field_info.type_name = field.type.spelling
 
         if canonical_kind in {TypeKind.CONSTANTARRAY, TypeKind.INCOMPLETEARRAY, TypeKind.VARIABLEARRAY, TypeKind.DEPENDENTSIZEDARRAY}:
-            element_kind = field.type.get_array_element_type().kind
+            # ex.) char text[SDL_TEXTEDITINGEVENT_TEXT_SIZE];
+            # ex.) Uint8 padding[56];
+            element_kind = field.type.get_array_element_type().get_canonical().kind
             element_detail = ""
             if element_kind in {TypeKind.ELABORATED, TypeKind.RECORD}:
                 element_detail = " (" + field.type.spelling + ")"
             field_info.element_count = field.type.get_array_size()
+            field_info.type_kind = element_kind
+            field_info.type_name = field.type.get_array_element_type().spelling
         elif canonical_kind in {TypeKind.ELABORATED, TypeKind.RECORD}:
-            pass # print("%s%s" % ("  " * (ctx.depth + 1), field.type.spelling))
+            cursor_decl = field.type.get_canonical()
+            if cursor_decl.kind == CursorKind.STRUCT_DECL or cursor_decl.kind == CursorKind.UNION_DECL:
+                ctx.push()
+                collect_decl_struct(ctx, cursor_decl, cursor_decl.spelling)
+                ctx.pop()
         else:
-            pass
+            # [2018-03-21] A wrong member 'packed' is mixed in the parsed result of 'SDL_AudioCVT'.
+            # "#define SDL_AUDIOCVT_PACKED __attribute__((packed))" and "SDL_AUDIOCVT_PACKED SDL_AudioCVT;" might cause this problem.
+            # The condition below seems useful for preventing wrong members to be added.
+            if field_info.type_kind == TypeKind.INVALID and field.get_field_offsetof() == -1:
+                continue
 
         struct_info.push(field_info)
-        ctx.pop()
 
     ctx.add_decl_struct(struct_info.name, struct_info)
 
@@ -368,18 +552,23 @@ def collect_decl(ctx, cursor):
     ctx.pop()
 
 
-def execute(ctx):
-    arg = [
-        "-I/usr/local/Cellar/sdl2/2.0.8/include/", "-fsyntax-only", "-DDOXYGEN_SHOULD_IGNORE_THIS",
-    ]
+parser_arg = [
+    "-fsyntax-only", "-DDOXYGEN_SHOULD_IGNORE_THIS",
+]
 
-    opt = TranslationUnit.PARSE_SKIP_FUNCTION_BODIES | TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD | TranslationUnit.PARSE_INCOMPLETE
+parser_opt = TranslationUnit.PARSE_SKIP_FUNCTION_BODIES | TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD | TranslationUnit.PARSE_INCOMPLETE
+
+def execute(ctx):
     idx = Index.create()
 
     try:
-        tu  = idx.parse(ctx.parse_file, args=arg, unsaved_files=None, options=opt)
+        tu = idx.parse(ctx.parse_file, args=parser_arg, unsaved_files=None, options=parser_opt)
         ctx.depth = 0
         collect_decl(ctx, tu.cursor)
+
+        for typedef_name, typedef_info in ctx.decl_typedefs.items():
+            register_sdl2_cindex_mapping(str(typedef_info.type_kind), typedef_name)
+
     except TranslationUnitLoadError as err:
         print(err)
 

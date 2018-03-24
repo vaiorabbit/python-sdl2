@@ -1,3 +1,8 @@
+2018-03-25  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* sdl2/sdl2*py: Added.
+	* generator/generator_SDL_*.py: Added.
+
 2018-03-18  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* sdl2/sdl2_timer.py: Added.
