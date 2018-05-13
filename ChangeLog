@@ -1,3 +1,8 @@
+2018-05-14  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* sdl2/sdl2_img.py: Added.
+	* generator/generator_SDL_img.py: Added.
+
 2018-05-13  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* sdl2/sdl2_ttf.py: Added.
