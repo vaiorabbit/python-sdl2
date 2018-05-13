@@ -32,3 +32,5 @@ python generate_SDL_touch.py > ../sdl2/sdl2_touch.py
 python generate_SDL_version.py > ../sdl2/sdl2_version.py
 python generate_SDL_video.py > ../sdl2/sdl2_video.py
 python generate_SDL_vulkan.py > ../sdl2/sdl2_vulkan.py
+
+python generate_SDL_ttf.py > ../sdl2/sdl2_ttf.py

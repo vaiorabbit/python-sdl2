@@ -344,4 +344,8 @@
     , "SDL_WINDOWPOS_CENTERED" : null
     , "SDL_WINDOWPOS_ISCENTERED" : null
     , "SDL_vulkan_h_" : null
+    , "SDL_TTF_MAJOR_VERSION" : "2"
+    , "SDL_TTF_MINOR_VERSION" : "0"
+    , "SDL_TTF_PATCHLEVEL" : "14"
+    , "SDL_TTF_VERSION" : null
 }

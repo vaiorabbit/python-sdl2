@@ -80,7 +80,7 @@ def sanitize(ctx):
 
 ####################################################################################################
 
-def generate(ctx, prefix = PREFIX, postfix = POSTFIX):
+def generate(ctx, prefix = PREFIX, postfix = POSTFIX, *, table_prefix = "SDL2_"):
 
     print(prefix, file = sys.stdout)
 
@@ -136,13 +136,13 @@ def generate(ctx, prefix = PREFIX, postfix = POSTFIX):
         for func_name, func_info in ctx.decl_functions.items():
             if func_info == None:
                 continue
-            print("    SDL2_API_NAMES.append('%s')" % (func_name), file = sys.stdout)
+            print("    %sAPI_NAMES.append('%s')" % (table_prefix, func_name), file = sys.stdout)
             if len(func_info.args) == 0:
-                print("    SDL2_API_ARGS_MAP['%s'] = None" % (func_name) , file = sys.stdout)
+                print("    %sAPI_ARGS_MAP['%s'] = None" % (table_prefix, func_name) , file = sys.stdout)
             else:
                 args_str = list(map((lambda t: str(t.type_kind)), func_info.args))
-                print("    SDL2_API_ARGS_MAP['%s'] = [%s]" % (func_name, ', '.join(args_str)), file = sys.stdout)
-            print("    SDL2_API_RETVAL_MAP['%s'] = %s" % (func_name, str(func_info.retval.type_kind)), file = sys.stdout)
+                print("    %sAPI_ARGS_MAP['%s'] = [%s]" % (table_prefix, func_name, ', '.join(args_str)), file = sys.stdout)
+            print("    %sAPI_RETVAL_MAP['%s'] = %s" % (table_prefix, func_name, str(func_info.retval.type_kind)), file = sys.stdout)
             print("", file = sys.stdout)
 
     print(postfix, file = sys.stdout)
