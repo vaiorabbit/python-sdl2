@@ -350,8 +350,8 @@ def collect_decl_macro(ctx, cursor):
     macro_name = str(tokens[0].spelling)
     macro_value = list(map((lambda t: str(t.spelling)), tokens[1:len(tokens)]))
 
-    # pick out numerical values with 'SDL_' prefix
-    if re.match(r"^SDL_", macro_name):
+    # pick out values with 'SDL_' or 'SDL2_ (for SDL2_gfx)' prefix
+    if re.match(r"^SDL_|^SDL2_", macro_name):
         ctx.add_decl_macro(macro_name, macro_value)
     ctx.collection_mode = ParseContext.Decl_Unknown
 

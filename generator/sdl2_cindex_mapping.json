@@ -153,4 +153,5 @@
     , "SDL_vulkanSurface" : "TypeKind.POINTER"
     , "TTF_Font" : "TypeKind.RECORD"
     , "IMG_InitFlags" : "TypeKind.ENUM"
+    , "FPSmanager" : "TypeKind.RECORD"
 }

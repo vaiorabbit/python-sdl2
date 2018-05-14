@@ -34,12 +34,16 @@ from .sdl2_blendmode import *
 
 from .sdl2_ttf import *
 from .sdl2_image import *
+from .sdl2_gfxPrimitives import *
+from .sdl2_rotozoom import *
+from .sdl2_imageFilter import *
+from .sdl2_framerate import *
 
 __author__  = 'vaiorabbit'
 __version__ = '1.0.0'
 __license__ = 'zlib'
 
-def sdl2_load(lib, output_error = False, *, ttf_libpath = None, img_libpath = None):
+def sdl2_load(lib, output_error = False, *, ttf_libpath = None, img_libpath = None, gfx_libpath = None):
 
     api.SDL2_LOADER = ctypes.cdll.LoadLibrary(lib)
 
@@ -113,6 +117,25 @@ def sdl2_load(lib, output_error = False, *, ttf_libpath = None, img_libpath = No
                     func_ptr = getattr(api.SDL2_IMG_LOADER, name) # ctypes _FuncPtr
                     func_ptr.argtypes = api.SDL2_IMG_API_ARGS_MAP[name]
                     func_ptr.restype = api.SDL2_IMG_API_RETVAL_MAP[name]
+                    globals()[name] = func_ptr
+                except AttributeError:
+                    if output_error:
+                        print("Python-SDL2 : API {} not found.".format(name))
+                finally:
+                    pass
+
+    if gfx_libpath != None:
+        api.SDL2_GFX_LOADER = ctypes.cdll.LoadLibrary(gfx_libpath)
+        if api.SDL2_GFX_LOADER != None:
+            sdl2_gfxPrimitives.setup_symbols()
+            sdl2_rotozoom.setup_symbols()
+            sdl2_imageFilter.setup_symbols()
+            sdl2_framerate.setup_symbols()
+            for name in api.SDL2_GFX_API_NAMES:
+                try:
+                    func_ptr = getattr(api.SDL2_GFX_LOADER, name) # ctypes _FuncPtr
+                    func_ptr.argtypes = api.SDL2_GFX_API_ARGS_MAP[name]
+                    func_ptr.restype = api.SDL2_GFX_API_RETVAL_MAP[name]
                     globals()[name] = func_ptr
                 except AttributeError:
                     if output_error:

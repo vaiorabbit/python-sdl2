@@ -34,3 +34,9 @@ python generate_SDL_video.py > ../sdl2/sdl2_video.py
 python generate_SDL_vulkan.py > ../sdl2/sdl2_vulkan.py
 
 python generate_SDL_ttf.py > ../sdl2/sdl2_ttf.py
+python generate_SDL_image.py > ../sdl2/sdl2_image.py
+python generate_SDL2_gfxPrimitives.py > ../sdl2/sdl2_gfxPrimitives.py
+python generate_SDL2_rotozoom.py > ../sdl2/sdl2_rotozoom.py
+python generate_SDL2_imageFilter.py > ../sdl2/sdl2_imageFilter.py
+python generate_SDL2_framerate.py > ../sdl2/sdl2_framerate.py
+
