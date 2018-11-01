@@ -70,6 +70,10 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_HasAVX2'] = None
     SDL2_API_RETVAL_MAP['SDL_HasAVX2'] = ctypes.c_int
 
+    SDL2_API_NAMES.append('SDL_HasAVX512F')
+    SDL2_API_ARGS_MAP['SDL_HasAVX512F'] = None
+    SDL2_API_RETVAL_MAP['SDL_HasAVX512F'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_HasNEON')
     SDL2_API_ARGS_MAP['SDL_HasNEON'] = None
     SDL2_API_RETVAL_MAP['SDL_HasNEON'] = ctypes.c_int

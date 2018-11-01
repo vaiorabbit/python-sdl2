@@ -11,8 +11,8 @@ from .sdl2_keyboard import SDL_Keysym
 # Define/Macro
 SDL_RELEASED = 0
 SDL_PRESSED = 1
-SDL_TEXTEDITINGEVENT_TEXT_SIZE = ( 32 )
-SDL_TEXTINPUTEVENT_TEXT_SIZE = ( 32 )
+SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32
+SDL_TEXTINPUTEVENT_TEXT_SIZE = 32
 SDL_QUERY = -1
 SDL_IGNORE = 0
 SDL_DISABLE = 0
@@ -27,6 +27,7 @@ SDL_APP_WILLENTERBACKGROUND = 259
 SDL_APP_DIDENTERBACKGROUND = 260
 SDL_APP_WILLENTERFOREGROUND = 261
 SDL_APP_DIDENTERFOREGROUND = 262
+SDL_DISPLAYEVENT = 336
 SDL_WINDOWEVENT = 512
 SDL_SYSWMEVENT = 513
 SDL_KEYDOWN = 768
@@ -64,6 +65,7 @@ SDL_DROPBEGIN = 4098
 SDL_DROPCOMPLETE = 4099
 SDL_AUDIODEVICEADDED = 4352
 SDL_AUDIODEVICEREMOVED = 4353
+SDL_SENSORUPDATE = 4608
 SDL_RENDER_TARGETS_RESET = 8192
 SDL_RENDER_DEVICE_RESET = 8193
 SDL_USEREVENT = 32768
@@ -83,6 +85,18 @@ class SDL_CommonEvent(ctypes.Structure):
     _fields_ = [
         ("type", ctypes.c_uint),
         ("timestamp", ctypes.c_uint),
+    ]
+
+class SDL_DisplayEvent(ctypes.Structure):
+    _fields_ = [
+        ("type", ctypes.c_uint),
+        ("timestamp", ctypes.c_uint),
+        ("display", ctypes.c_uint),
+        ("event", ctypes.c_uint8),
+        ("padding1", ctypes.c_uint8),
+        ("padding2", ctypes.c_uint8),
+        ("padding3", ctypes.c_uint8),
+        ("data1", ctypes.c_int),
     ]
 
 class SDL_WindowEvent(ctypes.Structure):
@@ -309,6 +323,14 @@ class SDL_DropEvent(ctypes.Structure):
         ("windowID", ctypes.c_uint),
     ]
 
+class SDL_SensorEvent(ctypes.Structure):
+    _fields_ = [
+        ("type", ctypes.c_uint),
+        ("timestamp", ctypes.c_uint),
+        ("which", ctypes.c_int),
+        ("data", ctypes.c_float * 6),
+    ]
+
 class SDL_QuitEvent(ctypes.Structure):
     _fields_ = [
         ("type", ctypes.c_uint),
@@ -342,6 +364,7 @@ class SDL_Event(ctypes.Union):
     _fields_ = [
         ("type", ctypes.c_uint),
         ("common", SDL_CommonEvent),
+        ("display", SDL_DisplayEvent),
         ("window", SDL_WindowEvent),
         ("key", SDL_KeyboardEvent),
         ("edit", SDL_TextEditingEvent),
@@ -358,6 +381,7 @@ class SDL_Event(ctypes.Union):
         ("cbutton", SDL_ControllerButtonEvent),
         ("cdevice", SDL_ControllerDeviceEvent),
         ("adevice", SDL_AudioDeviceEvent),
+        ("sensor", SDL_SensorEvent),
         ("quit", SDL_QuitEvent),
         ("user", SDL_UserEvent),
         ("syswm", SDL_SysWMEvent),

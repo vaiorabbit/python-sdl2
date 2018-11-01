@@ -4,7 +4,7 @@
 *   Patch ./SDL2/SDL_config.h with ./patch_config.py
     *   The line '#define HAVE_INTTYPES_H 1' will be removed.
         *   By including 'inttypes.h', all SDL integer types (Sint8, etc.) are interpreted as 'TypeKind.INT'.
-*   Generate mapping tables
+*   Generate mapping tables with ./generate_initial_mapping.sh to get
     *   sdl2_cindex_mapping.json
     *   sdl2_define_mapping.json
 *   Edit sdl2_define_mapping.json

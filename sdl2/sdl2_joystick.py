@@ -69,6 +69,10 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_JoystickNameForIndex'] = [ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_JoystickNameForIndex'] = ctypes.c_char_p
 
+    SDL2_API_NAMES.append('SDL_JoystickGetDevicePlayerIndex')
+    SDL2_API_ARGS_MAP['SDL_JoystickGetDevicePlayerIndex'] = [ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_JoystickGetDevicePlayerIndex'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_JoystickGetDeviceGUID')
     SDL2_API_ARGS_MAP['SDL_JoystickGetDeviceGUID'] = [ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_JoystickGetDeviceGUID'] = None
@@ -104,6 +108,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_JoystickName')
     SDL2_API_ARGS_MAP['SDL_JoystickName'] = [ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_JoystickName'] = ctypes.c_char_p
+
+    SDL2_API_NAMES.append('SDL_JoystickGetPlayerIndex')
+    SDL2_API_ARGS_MAP['SDL_JoystickGetPlayerIndex'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_JoystickGetPlayerIndex'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_JoystickGetGUID')
     SDL2_API_ARGS_MAP['SDL_JoystickGetGUID'] = [ctypes.c_void_p]
@@ -184,6 +192,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_JoystickGetButton')
     SDL2_API_ARGS_MAP['SDL_JoystickGetButton'] = [ctypes.c_void_p, ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_JoystickGetButton'] = ctypes.c_uint8
+
+    SDL2_API_NAMES.append('SDL_JoystickRumble')
+    SDL2_API_ARGS_MAP['SDL_JoystickRumble'] = [ctypes.c_void_p, ctypes.c_ushort, ctypes.c_ushort, ctypes.c_uint]
+    SDL2_API_RETVAL_MAP['SDL_JoystickRumble'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_JoystickClose')
     SDL2_API_ARGS_MAP['SDL_JoystickClose'] = [ctypes.c_void_p]

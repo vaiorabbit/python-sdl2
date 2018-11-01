@@ -50,6 +50,13 @@ SDL_WINDOWEVENT_FOCUS_LOST = 13
 SDL_WINDOWEVENT_CLOSE = 14
 SDL_WINDOWEVENT_TAKE_FOCUS = 15
 SDL_WINDOWEVENT_HIT_TEST = 16
+SDL_DISPLAYEVENT_NONE = 0
+SDL_DISPLAYEVENT_ORIENTATION = 1
+SDL_ORIENTATION_UNKNOWN = 0
+SDL_ORIENTATION_LANDSCAPE = 1
+SDL_ORIENTATION_LANDSCAPE_FLIPPED = 2
+SDL_ORIENTATION_PORTRAIT = 3
+SDL_ORIENTATION_PORTRAIT_FLIPPED = 4
 SDL_GL_RED_SIZE = 0
 SDL_GL_GREEN_SIZE = 1
 SDL_GL_BLUE_SIZE = 2
@@ -102,6 +109,8 @@ SDL_HITTEST_RESIZE_LEFT = 9
 # Typedef
 SDL_WindowFlags = ctypes.c_int
 SDL_WindowEventID = ctypes.c_int
+SDL_DisplayEventID = ctypes.c_int
+SDL_DisplayOrientation = ctypes.c_int
 SDL_GLContext = ctypes.c_void_p
 SDL_GLattr = ctypes.c_int
 SDL_GLprofile = ctypes.c_int
@@ -156,13 +165,17 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_GetDisplayBounds'] = [ctypes.c_int, ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_GetDisplayBounds'] = ctypes.c_int
 
+    SDL2_API_NAMES.append('SDL_GetDisplayUsableBounds')
+    SDL2_API_ARGS_MAP['SDL_GetDisplayUsableBounds'] = [ctypes.c_int, ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_GetDisplayUsableBounds'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_GetDisplayDPI')
     SDL2_API_ARGS_MAP['SDL_GetDisplayDPI'] = [ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_GetDisplayDPI'] = ctypes.c_int
 
-    SDL2_API_NAMES.append('SDL_GetDisplayUsableBounds')
-    SDL2_API_ARGS_MAP['SDL_GetDisplayUsableBounds'] = [ctypes.c_int, ctypes.c_void_p]
-    SDL2_API_RETVAL_MAP['SDL_GetDisplayUsableBounds'] = ctypes.c_int
+    SDL2_API_NAMES.append('SDL_GetDisplayOrientation')
+    SDL2_API_ARGS_MAP['SDL_GetDisplayOrientation'] = [ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_GetDisplayOrientation'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_GetNumDisplayModes')
     SDL2_API_ARGS_MAP['SDL_GetNumDisplayModes'] = [ctypes.c_int]

@@ -82,6 +82,10 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_GameControllerNameForIndex'] = [ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_GameControllerNameForIndex'] = ctypes.c_char_p
 
+    SDL2_API_NAMES.append('SDL_GameControllerMappingForDeviceIndex')
+    SDL2_API_ARGS_MAP['SDL_GameControllerMappingForDeviceIndex'] = [ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_GameControllerMappingForDeviceIndex'] = ctypes.c_char_p
+
     SDL2_API_NAMES.append('SDL_GameControllerOpen')
     SDL2_API_ARGS_MAP['SDL_GameControllerOpen'] = [ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_GameControllerOpen'] = ctypes.c_void_p
@@ -93,6 +97,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_GameControllerName')
     SDL2_API_ARGS_MAP['SDL_GameControllerName'] = [ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_GameControllerName'] = ctypes.c_char_p
+
+    SDL2_API_NAMES.append('SDL_GameControllerGetPlayerIndex')
+    SDL2_API_ARGS_MAP['SDL_GameControllerGetPlayerIndex'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_GameControllerGetPlayerIndex'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_GameControllerGetVendor')
     SDL2_API_ARGS_MAP['SDL_GameControllerGetVendor'] = [ctypes.c_void_p]
@@ -153,6 +161,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_GameControllerGetButton')
     SDL2_API_ARGS_MAP['SDL_GameControllerGetButton'] = [ctypes.c_void_p, ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_GameControllerGetButton'] = ctypes.c_uint8
+
+    SDL2_API_NAMES.append('SDL_GameControllerRumble')
+    SDL2_API_ARGS_MAP['SDL_GameControllerRumble'] = [ctypes.c_void_p, ctypes.c_ushort, ctypes.c_ushort, ctypes.c_uint]
+    SDL2_API_RETVAL_MAP['SDL_GameControllerRumble'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_GameControllerClose')
     SDL2_API_ARGS_MAP['SDL_GameControllerClose'] = [ctypes.c_void_p]

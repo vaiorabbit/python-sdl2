@@ -1,3 +1,7 @@
+2018-11-01  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* Now compatible with SDL 2.0.9
+
 2018-05-15  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* Added SDL2_gfx features.

@@ -92,6 +92,10 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_SetColorKey'] = [ctypes.c_void_p, ctypes.c_int, ctypes.c_uint]
     SDL2_API_RETVAL_MAP['SDL_SetColorKey'] = ctypes.c_int
 
+    SDL2_API_NAMES.append('SDL_HasColorKey')
+    SDL2_API_ARGS_MAP['SDL_HasColorKey'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_HasColorKey'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_GetColorKey')
     SDL2_API_ARGS_MAP['SDL_GetColorKey'] = [ctypes.c_void_p, ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_GetColorKey'] = ctypes.c_int
