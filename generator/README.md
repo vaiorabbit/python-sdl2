@@ -1,9 +1,13 @@
 # Usage #
 
 *   Copy SDL2 headers into ./SDL2
-*   Patch ./SDL2/SDL_config.h with ./patch_config.py
-    *   The line '#define HAVE_INTTYPES_H 1' will be removed.
-        *   By including 'inttypes.h', all SDL integer types (Sint8, etc.) are interpreted as 'TypeKind.INT'.
+    *   You can also put these headers to make bindings:
+        *   SDL_gfx(SDL2_rotozoom.h, SDL2_imageFilter.h, SDL2_gfxPrimitives.h, SDL2_framerate.h)
+        *   SDL_image (SDL_image.h)
+        *   SDL_mixer (SDL_mixer.h)
+        *   SDL_ttf (SDL_ttf.h)
+*   Patch ./SDL2/SDL_config.h by commenting out the line '#define HAVE_INTTYPES_H 1'
+    *   By including 'inttypes.h', all SDL integer types (Sint8, etc.) are interpreted as 'TypeKind.INT'.
 *   Generate mapping tables with ./generate_initial_mapping.sh to get
     *   sdl2_cindex_mapping.json
     *   sdl2_define_mapping.json

@@ -10,10 +10,15 @@ from .api import SDL2_API_NAMES, SDL2_API_ARGS_MAP, SDL2_API_RETVAL_MAP
 # Define/Macro
 
 # Enum
+SDL_TOUCH_DEVICE_INVALID = -1
+SDL_TOUCH_DEVICE_DIRECT = 0
+SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE = 1
+SDL_TOUCH_DEVICE_INDIRECT_RELATIVE = 2
 
 # Typedef
 SDL_TouchID = ctypes.c_longlong
 SDL_FingerID = ctypes.c_longlong
+SDL_TouchDeviceType = ctypes.c_int
 
 # Struct
 
@@ -34,6 +39,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_GetTouchDevice')
     SDL2_API_ARGS_MAP['SDL_GetTouchDevice'] = [ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_GetTouchDevice'] = ctypes.c_longlong
+
+    SDL2_API_NAMES.append('SDL_GetTouchDeviceType')
+    SDL2_API_ARGS_MAP['SDL_GetTouchDeviceType'] = [ctypes.c_longlong]
+    SDL2_API_RETVAL_MAP['SDL_GetTouchDeviceType'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_GetNumTouchFingers')
     SDL2_API_ARGS_MAP['SDL_GetNumTouchFingers'] = [ctypes.c_longlong]

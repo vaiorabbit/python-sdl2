@@ -48,9 +48,37 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_FreeRW'] = [ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_FreeRW'] = None
 
+    SDL2_API_NAMES.append('SDL_RWsize')
+    SDL2_API_ARGS_MAP['SDL_RWsize'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RWsize'] = ctypes.c_longlong
+
+    SDL2_API_NAMES.append('SDL_RWseek')
+    SDL2_API_ARGS_MAP['SDL_RWseek'] = [ctypes.c_void_p, ctypes.c_longlong, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RWseek'] = ctypes.c_longlong
+
+    SDL2_API_NAMES.append('SDL_RWtell')
+    SDL2_API_ARGS_MAP['SDL_RWtell'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RWtell'] = ctypes.c_longlong
+
+    SDL2_API_NAMES.append('SDL_RWread')
+    SDL2_API_ARGS_MAP['SDL_RWread'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong, ctypes.c_ulong]
+    SDL2_API_RETVAL_MAP['SDL_RWread'] = ctypes.c_size_t
+
+    SDL2_API_NAMES.append('SDL_RWwrite')
+    SDL2_API_ARGS_MAP['SDL_RWwrite'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong, ctypes.c_ulong]
+    SDL2_API_RETVAL_MAP['SDL_RWwrite'] = ctypes.c_size_t
+
+    SDL2_API_NAMES.append('SDL_RWclose')
+    SDL2_API_ARGS_MAP['SDL_RWclose'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RWclose'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_LoadFile_RW')
     SDL2_API_ARGS_MAP['SDL_LoadFile_RW'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_LoadFile_RW'] = ctypes.c_void_p
+
+    SDL2_API_NAMES.append('SDL_LoadFile')
+    SDL2_API_ARGS_MAP['SDL_LoadFile'] = [ctypes.c_char_p, ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_LoadFile'] = ctypes.c_void_p
 
     SDL2_API_NAMES.append('SDL_ReadU8')
     SDL2_API_ARGS_MAP['SDL_ReadU8'] = [ctypes.c_void_p]

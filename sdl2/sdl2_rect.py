@@ -21,12 +21,26 @@ class SDL_Point(ctypes.Structure):
         ("y", ctypes.c_int),
     ]
 
+class SDL_FPoint(ctypes.Structure):
+    _fields_ = [
+        ("x", ctypes.c_float),
+        ("y", ctypes.c_float),
+    ]
+
 class SDL_Rect(ctypes.Structure):
     _fields_ = [
         ("x", ctypes.c_int),
         ("y", ctypes.c_int),
         ("w", ctypes.c_int),
         ("h", ctypes.c_int),
+    ]
+
+class SDL_FRect(ctypes.Structure):
+    _fields_ = [
+        ("x", ctypes.c_float),
+        ("y", ctypes.c_float),
+        ("w", ctypes.c_float),
+        ("h", ctypes.c_float),
     ]
 
 # Function

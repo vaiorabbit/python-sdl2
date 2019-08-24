@@ -97,6 +97,7 @@ SDL_PIXELFORMAT_NV21 = 825382478
 SDL_PIXELFORMAT_EXTERNAL_OES = 542328143
 
 # Typedef
+SDL_PixelFormatEnum = ctypes.c_int
 
 # Struct
 

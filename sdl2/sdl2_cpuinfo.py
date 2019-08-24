@@ -82,4 +82,16 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_GetSystemRAM'] = None
     SDL2_API_RETVAL_MAP['SDL_GetSystemRAM'] = ctypes.c_int
 
+    SDL2_API_NAMES.append('SDL_SIMDGetAlignment')
+    SDL2_API_ARGS_MAP['SDL_SIMDGetAlignment'] = None
+    SDL2_API_RETVAL_MAP['SDL_SIMDGetAlignment'] = ctypes.c_size_t
+
+    SDL2_API_NAMES.append('SDL_SIMDAlloc')
+    SDL2_API_ARGS_MAP['SDL_SIMDAlloc'] = [ctypes.c_ulong]
+    SDL2_API_RETVAL_MAP['SDL_SIMDAlloc'] = ctypes.c_void_p
+
+    SDL2_API_NAMES.append('SDL_SIMDFree')
+    SDL2_API_ARGS_MAP['SDL_SIMDFree'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_SIMDFree'] = None
+
 

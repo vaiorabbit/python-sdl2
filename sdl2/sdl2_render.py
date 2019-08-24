@@ -244,6 +244,46 @@ def setup_symbols():
     SDL2_API_ARGS_MAP['SDL_RenderCopyEx'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_double, ctypes.c_void_p, ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_RenderCopyEx'] = ctypes.c_int
 
+    SDL2_API_NAMES.append('SDL_RenderDrawPointF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawPointF'] = [ctypes.c_void_p, ctypes.c_float, ctypes.c_float]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawPointF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderDrawPointsF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawPointsF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawPointsF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderDrawLineF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawLineF'] = [ctypes.c_void_p, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawLineF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderDrawLinesF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawLinesF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawLinesF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderDrawRectF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawRectF'] = [ctypes.c_void_p, ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawRectF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderDrawRectsF')
+    SDL2_API_ARGS_MAP['SDL_RenderDrawRectsF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RenderDrawRectsF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderFillRectF')
+    SDL2_API_ARGS_MAP['SDL_RenderFillRectF'] = [ctypes.c_void_p, ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RenderFillRectF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderFillRectsF')
+    SDL2_API_ARGS_MAP['SDL_RenderFillRectsF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RenderFillRectsF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderCopyF')
+    SDL2_API_ARGS_MAP['SDL_RenderCopyF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RenderCopyF'] = ctypes.c_int
+
+    SDL2_API_NAMES.append('SDL_RenderCopyExF')
+    SDL2_API_ARGS_MAP['SDL_RenderCopyExF'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_double, ctypes.c_void_p, ctypes.c_int]
+    SDL2_API_RETVAL_MAP['SDL_RenderCopyExF'] = ctypes.c_int
+
     SDL2_API_NAMES.append('SDL_RenderReadPixels')
     SDL2_API_ARGS_MAP['SDL_RenderReadPixels'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p, ctypes.c_int]
     SDL2_API_RETVAL_MAP['SDL_RenderReadPixels'] = ctypes.c_int
@@ -259,6 +299,10 @@ def setup_symbols():
     SDL2_API_NAMES.append('SDL_DestroyRenderer')
     SDL2_API_ARGS_MAP['SDL_DestroyRenderer'] = [ctypes.c_void_p]
     SDL2_API_RETVAL_MAP['SDL_DestroyRenderer'] = None
+
+    SDL2_API_NAMES.append('SDL_RenderFlush')
+    SDL2_API_ARGS_MAP['SDL_RenderFlush'] = [ctypes.c_void_p]
+    SDL2_API_RETVAL_MAP['SDL_RenderFlush'] = ctypes.c_int
 
     SDL2_API_NAMES.append('SDL_GL_BindTexture')
     SDL2_API_ARGS_MAP['SDL_GL_BindTexture'] = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]

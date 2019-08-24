@@ -1,5 +1,5 @@
 #!/usr/local/bin/zsh
-export PYTHONPATH=/usr/local/Cellar/llvm/6.0.0/lib/python2.7/site-packages
+export PYTHONPATH=/usr/local/Cellar/llvm/8.0.1/lib/python2.7/site-packages
 python generate_SDL.py > ../sdl2/sdl2.py
 python generate_SDL_audio.py > ../sdl2/sdl2_audio.py
 python generate_SDL_blendmode.py > ../sdl2/sdl2_blendmode.py

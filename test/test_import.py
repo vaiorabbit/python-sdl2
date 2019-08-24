@@ -27,6 +27,11 @@ def main():
 
     print('Pixel Format: ', sdl2.SDL_GetPixelFormatName(sdl2.SDL_PIXELFORMAT_RGBA32))
 
+    # Test features added in 2.0.10
+    # Ref.: https://discourse.libsdl.org/t/sdl-2-0-10-released/26429
+    print('Touch Device (0) Type: ', sdl2.SDL_GetTouchDeviceType(sdl2.SDL_GetTouchDevice(0)))
+    print('SIMD Alignment: ', sdl2.SDL_SIMDGetAlignment())
+
     sdl2.SDL_Quit()
 
 if __name__ == '__main__':

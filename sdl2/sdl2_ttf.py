@@ -12,7 +12,7 @@ from .sdl2_pixels import SDL_Color
 # Define/Macro
 SDL_TTF_MAJOR_VERSION = 2
 SDL_TTF_MINOR_VERSION = 0
-SDL_TTF_PATCHLEVEL = 14
+SDL_TTF_PATCHLEVEL = 15
 
 # Enum
 

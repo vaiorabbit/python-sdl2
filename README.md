@@ -5,7 +5,7 @@
 ...and wrapper code generator.
 
 *   Created : 2018-03-11
-*   Last modified : 2018-11-01
+*   Last modified : 2019-08-24
 
 [Notice] This project is experimental.
 
@@ -30,7 +30,7 @@
 The zlib/libpng License ( http://opensource.org/licenses/Zlib ).
 
     python-sdl2
-    Copyright (c) 2018 vaiorabbit
+    Copyright (c) 2018-2019 vaiorabbit
 
     This software is provided 'as-is', without any express or implied
     warranty. In no event will the authors be held liable for any damages

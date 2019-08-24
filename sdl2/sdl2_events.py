@@ -11,8 +11,8 @@ from .sdl2_keyboard import SDL_Keysym
 # Define/Macro
 SDL_RELEASED = 0
 SDL_PRESSED = 1
-SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32
-SDL_TEXTINPUTEVENT_TEXT_SIZE = 32
+SDL_TEXTEDITINGEVENT_TEXT_SIZE = ( 32 )
+SDL_TEXTINPUTEVENT_TEXT_SIZE = ( 32 )
 SDL_QUERY = -1
 SDL_IGNORE = 0
 SDL_DISABLE = 0
@@ -76,6 +76,7 @@ SDL_GETEVENT = 2
 
 # Typedef
 SDL_EventType = ctypes.c_int
+SDL_compile_time_assert_SDL_Event = ctypes.c_int
 SDL_eventaction = ctypes.c_int
 SDL_EventFilter = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p)
 
